@@ -1,6 +1,6 @@
 # Storage Box
 
-An simple app to store important note and photo.
+An simple app to store note and photo.
 
 [Changelog](CHANGELOG.md)
 
