@@ -37,6 +37,8 @@ Developing in progress...
    - Location: [`src/views/Home/Home.js`](src/views/Home/Home.js)
    - Issue Link: [`https://github.com/itinance/react-native-fs/issues/700`](https://github.com/itinance/react-native-fs/issues/700)
 
-**_Find by issue tag for exact location_**
+**_Find issue tag for exact location_**
+
+
 
 Feel free to contact me at chern-97@hotmail.com
