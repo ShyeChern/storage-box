@@ -15,6 +15,9 @@ export const styleBase = StyleSheet.create({
 		marginVertical: styleVar.margin.sm,
 		padding: styleVar.padding.md,
 	},
+	btnText: {
+		fontSize: styleVar.fonts.md,
+	},
 	centalicText: {
 		textAlign: 'center',
 		fontStyle: 'italic',

@@ -1,13 +1,13 @@
 import 'react-native-gesture-handler';
-import React, { useState, useEffect, useReducer, useMemo, Suspense } from 'react';
-import { StyleSheet, ActivityIndicator, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useReducer, useMemo } from 'react';
+import { StyleSheet, ActivityIndicator } from 'react-native';
 import RNFS from 'react-native-fs';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import MainNavigator from 'src/routes/MainNavigator';
 import CombinedContext from 'src/components/CombinedContext';
 import { appInitialState, appReducer, appContext } from 'src/components/hooks/app';
-import base64 from 'base-64';
 import { constant } from 'src/utils/constants';
+import { readFile } from 'src/utils/function';
 import CustomAlert from 'src/components/CustomAlert';
 import Pincode from 'src/views/Pincode/Pincode';
 
@@ -39,51 +39,33 @@ export default function App() {
 
 		const checkPincode = async () => {
 			const exist = await RNFS.exists(constant.PINCODE_PATH);
-			if (exist) {
-				const pincode = await RNFS.readFile(constant.PINCODE_PATH).catch((e) => console.log(e));
-				console.log(pincode);
-			} else {
+			if (!exist) {
+				RNFS.writeFile(constant.PINCODE_PATH, '', 'utf8').catch((err) => {
+					CustomAlert(err.message);
+				});
 				setAuth(true);
+			} else {
+				const pincode = await readFile(constant.PINCODE_PATH);
+				if (!pincode.result) {
+					CustomAlert(pincode.message);
+				}
+				// empty string = pincode not set
+				if (!pincode.data) {
+					setAuth(true);
+				}
 			}
 			setIsLoading(false);
 		};
+
 		createDirectory();
 		createNoteFile();
 		checkPincode();
-	});
-	useEffect(() => {
-		// base64
-		// console.log(base64.encode('1234'));
-		// console.log(base64.decode('MTIzNA=='));
-
-		// check directory then create directory
-		// /storage/emulated/0/Android/StorageBox
-		// RNFS.exists(RNFS.ExternalStorageDirectoryPath + '/StorageBox').then((exist) =>
-		// 	console.log(exist, 'exist'),
-		// );
-		// var path = RNFS.ExternalStorageDirectoryPath + '/StorageBox/fsfile.txt';
-
-		// RNFS.mkdir(RNFS.ExternalStorageDirectoryPath + '/StorageBox')
-		// 	.then((cb) => {
-		// 		console.log(cb);
-		// 	})
-		// 	.catch((e) => console.log(e));
-
-		// write the file
-		// RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
-		// 	.then((success) => {
-		// 		console.log('FILE WRITTEN!');
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(err.message);
-		// 	});
-
-		return () => {};
 	}, []);
+
 	if (isLoading) {
 		return <ActivityIndicator style={styles.loading} size="large" color="#000" />;
 	} else if (!isAuth) {
-		return <Pincode />;
+		return <Pincode setAuth={setAuth} />;
 	} else {
 		return (
 			// send array of context to custom component to create layers of context

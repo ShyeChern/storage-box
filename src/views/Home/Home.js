@@ -10,13 +10,12 @@ import {
 	TextInput,
 	Modal,
 } from 'react-native';
-import RNFS from 'react-native-fs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Swipeable } from 'react-native-gesture-handler';
 import { styleVar, styleBase } from 'src/assets/styles/styles';
 import CustomAlert from 'src/components/CustomAlert';
 import { constant } from 'src/utils/constants';
-import { sortBy } from 'src/utils/function';
+import { sortBy, writeFile, readFile } from 'src/utils/function';
 
 export default function Home({ navigation }) {
 	const [isLoading, setIsLoading] = useState(true);
@@ -31,19 +30,17 @@ export default function Home({ navigation }) {
 		getItemList();
 	}, [isLoading]);
 
-	const getItemList = () => {
+	const getItemList = async () => {
 		setItemRef([]);
-		RNFS.readFile(constant.NOTE_PATH)
-			.then((result) => {
-				setItemList(JSON.parse(result).sort(sortBy('lastUpdate', true)));
-			})
-			.catch((err) => {
-				CustomAlert(err.message);
-			});
+		const items = await readFile(constant.NOTE_PATH);
+		if (!items.result) {
+			CustomAlert(items.message);
+		}
+		setItemList(JSON.parse(items.data).sort(sortBy('lastUpdate', true)));
 		setIsLoading(false);
 	};
 
-	const addItem = () => {
+	const addItem = async () => {
 		if (!itemText) {
 			CustomAlert('Please input note');
 			return;
@@ -54,12 +51,19 @@ export default function Home({ navigation }) {
 			note: itemText,
 			lastUpdate: Date.now(),
 		});
-		writeFile(currentItem, 'Add item success');
-		setItemText('');
-		setShowModal(false);
+
+		const result = await writeFile(constant.NOTE_PATH, JSON.stringify(currentItem));
+		if (result.result) {
+			CustomAlert('Add item success');
+			setIsLoading(true);
+			setItemText('');
+			setShowModal(false);
+		} else {
+			CustomAlert(result.message);
+		}
 	};
 
-	const editItem = () => {
+	const editItem = async () => {
 		if (!isEdit) {
 			setIsEdit(true);
 			setItemText(selectedItem.note);
@@ -68,32 +72,31 @@ export default function Home({ navigation }) {
 			selectedItem.note = itemText;
 			selectedItem.lastUpdate = Date.now();
 			newArray.push(selectedItem);
-			writeFile(newArray, 'Edit item success');
-			setIsEdit(false);
-			setItemText('');
-			setShowModal(false);
+
+			const result = await writeFile(constant.NOTE_PATH, JSON.stringify(newArray));
+			if (result.result) {
+				CustomAlert('Edit item success');
+				setIsLoading(true);
+				setIsEdit(false);
+				setItemText('');
+				setShowModal(false);
+			} else {
+				CustomAlert(result.message);
+			}
 		}
 	};
 
-	const deleteItem = (id) => {
-		writeFile(
-			itemList.filter((value) => value.id !== id),
-			'Delete item success',
+	const deleteItem = async (id) => {
+		const result = await writeFile(
+			constant.NOTE_PATH,
+			JSON.stringify(itemList.filter((value) => value.id !== id)),
 		);
-	};
-
-	const writeFile = (array, successMessage) => {
-		// Android 10 Issue - workaround by delete the original file first #ISSUE-002
-		RNFS.unlink(constant.NOTE_PATH).then(() => {
-			RNFS.writeFile(constant.NOTE_PATH, JSON.stringify(array), 'utf8')
-				.then(() => {
-					CustomAlert(successMessage);
-					setIsLoading(true);
-				})
-				.catch((err) => {
-					CustomAlert(err.message);
-				});
-		});
+		if (result.result) {
+			CustomAlert('Delete item success');
+			setIsLoading(true);
+		} else {
+			CustomAlert(result.message);
+		}
 	};
 
 	const renderLeftActions = (progress, dragX) => {
