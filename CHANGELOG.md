@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v1.1.0 (2021-08-)
+## v1.1.0 (2021-08-10)
 ### Feature
 * Add pincode function
 
