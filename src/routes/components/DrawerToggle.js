@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { styleVar } from 'src/assets/styles/styles';
 /**
@@ -12,6 +12,7 @@ export default function DrawerToggle({ navigation, ...rest }) {
 		<TouchableOpacity
 			{...rest}
 			onPress={() => {
+				Keyboard.dismiss();
 				navigation.toggleDrawer();
 			}}
 			style={styles.drawerToggle}

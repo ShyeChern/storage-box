@@ -9,6 +9,7 @@ import {
 	TextInput,
 	Keyboard,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import PincodeInput from 'src/views/Pincode/component/PincodeInput';
 import { styleVar, styleBase } from 'src/assets/styles/styles';
 import CustomAlert from 'src/components/CustomAlert';
@@ -22,6 +23,7 @@ export default function Pincode({ navigation }) {
 	const [prevPincodeConfirmation, setPrevPincodeConfirmation] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const inputRef = [];
+	const isFocused = useIsFocused();
 
 	useEffect(() => {
 		const getPrevPincode = async () => {
@@ -34,6 +36,10 @@ export default function Pincode({ navigation }) {
 		};
 		getPrevPincode();
 	}, [isLoading]);
+
+	useEffect(() => {
+		setPincode(new Array(constant.PINCODE_LENGTH).fill(''));
+	}, [isFocused]);
 
 	const updatePincode = async () => {
 		Keyboard.dismiss();
@@ -149,17 +155,14 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 	},
 	btnView: {
-		flexDirection: 'row',
-		justifyContent: 'space-around',
+		...styleBase.btnRow,
 	},
 	confirmBtn: {
 		...styleBase.btn,
-		alignSelf: 'center',
 		backgroundColor: styleVar.color.info,
 	},
 	cancelBtn: {
 		...styleBase.btn,
-		alignSelf: 'center',
 		backgroundColor: styleVar.color.secondary,
 	},
 	deleteBtn: {

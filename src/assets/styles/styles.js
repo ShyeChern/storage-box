@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { variables } from 'src/assets/styles/variables';
 
+export const styleVar = variables;
 export const styleBase = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -18,12 +19,24 @@ export const styleBase = StyleSheet.create({
 	btnText: {
 		fontSize: styleVar.fonts.md,
 	},
+	btnRow: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+	},
 	centalicText: {
 		textAlign: 'center',
 		fontStyle: 'italic',
 	},
+	modal: {
+		padding: styleVar.padding.sm,
+		paddingBottom: styleVar.padding.lg,
+		backgroundColor: styleVar.color.light,
+		borderWidth: 1,
+		borderRadius: 10,
+		width: '80%',
+	},
 	overlay: {
-		backgroundColor: variables.color.dark,
+		backgroundColor: styleVar.color.dark,
 		opacity: 0.5,
 		position: 'absolute',
 		top: 0,
@@ -32,5 +45,3 @@ export const styleBase = StyleSheet.create({
 		right: 0,
 	},
 });
-
-export const styleVar = variables;

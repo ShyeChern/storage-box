@@ -4,12 +4,12 @@ import {
 	Text,
 	View,
 	TouchableOpacity,
-	TouchableWithoutFeedback,
 	SafeAreaView,
 	FlatList,
 	TextInput,
 	Modal,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Swipeable } from 'react-native-gesture-handler';
 import { styleVar, styleBase } from 'src/assets/styles/styles';
@@ -25,10 +25,11 @@ export default function Home({ navigation }) {
 	const [itemList, setItemList] = useState([]);
 	const [itemRef, setItemRef] = useState([]);
 	const [showModal, setShowModal] = useState(false);
+	const isFocused = useIsFocused();
 
 	useEffect(() => {
 		getItemList();
-	}, [isLoading]);
+	}, [isLoading, isFocused]);
 
 	const getItemList = async () => {
 		setItemRef([]);
@@ -50,6 +51,7 @@ export default function Home({ navigation }) {
 			id: Date.now(),
 			note: itemText,
 			lastUpdate: Date.now(),
+			deletedAt: null,
 		});
 
 		const result = await writeFile(constant.NOTE_PATH, JSON.stringify(currentItem));
@@ -87,10 +89,10 @@ export default function Home({ navigation }) {
 	};
 
 	const deleteItem = async (id) => {
-		const result = await writeFile(
-			constant.NOTE_PATH,
-			JSON.stringify(itemList.filter((value) => value.id !== id)),
-		);
+		const deletedItemIndex = itemList.findIndex((value) => value.id === id);
+		itemList[deletedItemIndex].deletedAt = Date.now();
+
+		const result = await writeFile(constant.NOTE_PATH, JSON.stringify(itemList));
 		if (result.result) {
 			CustomAlert('Delete item success');
 			setIsLoading(true);
@@ -106,11 +108,12 @@ export default function Home({ navigation }) {
 			</View>
 		);
 	};
+
 	return (
 		<View style={styles.container}>
 			<SafeAreaView style={styles.container}>
 				<FlatList
-					data={itemList}
+					data={itemList.filter((value) => !value.deletedAt)}
 					onRefresh={() => getItemList()}
 					refreshing={isLoading}
 					renderItem={({ item, index }) => (
@@ -134,6 +137,7 @@ export default function Home({ navigation }) {
 							<TouchableOpacity
 								style={styles.itemView}
 								onPress={() => {
+									setIsEdit(false);
 									setSelectedItem(item);
 									setShowModal(true);
 								}}
@@ -141,7 +145,9 @@ export default function Home({ navigation }) {
 								<Text style={styles.itemText}>
 									{item.note.length > 300 ? `${item.note.substr(0, 300)} ...` : item.note}
 								</Text>
-								<Text style={styles.lastUpdate}>{new Date(item.lastUpdate).toDateString()}</Text>
+								<Text style={styles.lastUpdate}>
+									Last Update: {new Date(item.lastUpdate).toDateString()}
+								</Text>
 							</TouchableOpacity>
 						</Swipeable>
 					)}
@@ -173,11 +179,7 @@ export default function Home({ navigation }) {
 					setShowModal(false);
 				}}
 			>
-				{/* Tap outside modal to close modal */}
-				<TouchableWithoutFeedback onPress={() => setShowModal(false)}>
-					<View style={styles.modalOverlay} />
-				</TouchableWithoutFeedback>
-
+				<View style={styles.modalOverlay} />
 				<View style={styles.modalContainer}>
 					<View style={styles.modalView}>
 						<View style={styles.modalCloseBtnView}>
@@ -297,12 +299,7 @@ const styles = StyleSheet.create({
 		...styleBase.overlay,
 	},
 	modalView: {
-		padding: styleVar.padding.sm,
-		paddingBottom: styleVar.padding.lg,
-		backgroundColor: styleVar.color.light,
-		borderWidth: 1,
-		borderRadius: 10,
-		width: '80%',
+		...styleBase.modal,
 	},
 	modalCloseBtnView: {
 		alignItems: 'flex-end',

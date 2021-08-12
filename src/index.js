@@ -1,24 +1,17 @@
 import 'react-native-gesture-handler';
-import React, { useState, useEffect, useReducer, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import RNFS from 'react-native-fs';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import MainNavigator from 'src/routes/MainNavigator';
 import CombinedContext from 'src/components/CombinedContext';
-import { appInitialState, appReducer, appContext } from 'src/components/hooks/app';
 import { constant } from 'src/utils/constants';
-import { readFile } from 'src/utils/function';
+import { writeFile, readFile } from 'src/utils/function';
 import CustomAlert from 'src/components/CustomAlert';
 import Pincode from 'src/views/Pincode/Pincode';
 
 export default function App() {
-	const [appState, dispatchApp] = useReducer(appReducer, appInitialState);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isAuth, setAuth] = useState(false);
-
-	const appContextValue = useMemo(() => {
-		return { appState, dispatchApp };
-	}, [appState, dispatchApp]);
 
 	useEffect(() => {
 		const createDirectory = async () => {
@@ -54,12 +47,34 @@ export default function App() {
 					setAuth(true);
 				}
 			}
+		};
+
+		const checkDeletedItem = async () => {
+			let items = await readFile(constant.NOTE_PATH);
+			if (!items.result) {
+				CustomAlert(items.message);
+			}
+			// delete item that already exceed the time limit
+			const now = Date.now();
+			await writeFile(
+				constant.NOTE_PATH,
+				JSON.stringify(
+					JSON.parse(items.data).filter((value) => {
+						// deletedAt not null and exceed the allowed interval
+						if (value.deletedAt && now - value.deletedAt > constant.DELETE_INTERVAL_MILLISECOND) {
+							return false;
+						}
+						return true;
+					}),
+				),
+			);
 			setIsLoading(false);
 		};
 
 		createDirectory();
 		createNoteFile();
 		checkPincode();
+		checkDeletedItem();
 	}, []);
 
 	if (isLoading) {
@@ -68,50 +83,11 @@ export default function App() {
 		return <Pincode setAuth={setAuth} />;
 	} else {
 		return (
-			// send array of context to custom component to create layers of context
-			// <CombinedContext contexts={[{ context: appContext, value: appContextValue }]}>
 			<CombinedContext contexts={[]}>
 				<MainNavigator />
 			</CombinedContext>
 		);
 	}
-
-	// return (
-	// 	<View>
-	// 		<Text>Hi</Text>
-	// 		<SimpleLineIcons name="graph" size={30} color="#000000" onPress={() => alert('ewer')} />
-	// 		<TouchableOpacity
-	// 			onPress={() => {
-	// 				launchCamera({}, (cb) => {
-	// 					console.log(cb);
-	// 					if (cb.assets) {
-	// 						RNFS.copyFile(
-	// 							cb.assets[0].uri,
-	// 							RNFS.ExternalStorageDirectoryPath + '/StorageBox/test.jpg',
-	// 						)
-	// 							.then((success) => {
-	// 								console.log('FILE WRITTEN!');
-	// 							})
-	// 							.catch((err) => {
-	// 								console.log(err.message);
-	// 							});
-	// 					}
-	// 				});
-	// 			}}
-	// 		>
-	// 			<Text>Camera</Text>
-	// 		</TouchableOpacity>
-	// 		<TouchableOpacity
-	// 			onPress={() => {
-	// 				launchImageLibrary({}, (cb) => {
-	// 					console.log(cb);
-	// 				});
-	// 			}}
-	// 		>
-	// 			<Text>Image</Text>
-	// 		</TouchableOpacity>
-	// 	</View>
-	// );
 }
 
 const styles = StyleSheet.create({
