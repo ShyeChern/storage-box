@@ -2,7 +2,7 @@ import { Alert } from 'react-native';
 
 /**
  * https://reactnative.dev/docs/alert
- * @param {Strring} message Message to display
+ * @param {String} message Message to display
  * @param {Array} buttons Array of objects with button text, onPress function etc
  * @param {String} title Title of the alert
  * @returns Custom Alert

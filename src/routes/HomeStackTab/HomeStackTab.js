@@ -8,21 +8,21 @@ const Tab = createBottomTabNavigator();
 
 export default function HomeStackTab() {
 	return (
-		<Tab.Navigator initialRouteName={'Home'}>
+		<Tab.Navigator initialRouteName={'Item'}>
 			<Tab.Screen
-				name="Home"
+				name="Item"
 				component={HomeStack}
 				options={{
 					tabBarIcon: (props) => <FontAwesome {...props} name="file" />,
 				}}
 			/>
-			{/* <Tab.Screen
-				name="ImageView"
+			<Tab.Screen
+				name="Image"
 				component={ImageViewStack}
 				options={{
 					tabBarIcon: (props) => <FontAwesome {...props} name="image" />,
 				}}
-			/> */}
+			/>
 		</Tab.Navigator>
 	);
 }

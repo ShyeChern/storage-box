@@ -15,9 +15,20 @@ export default function App() {
 
 	useEffect(() => {
 		const createDirectory = async () => {
-			const exist = await RNFS.exists(constant.DIRECTORY_PATH);
-			if (!exist) {
+			const existDir = await RNFS.exists(constant.DIRECTORY_PATH);
+			if (!existDir) {
 				RNFS.mkdir(constant.DIRECTORY_PATH).catch((err) => CustomAlert(err.message));
+			}
+			const [existImg, existDel] = await Promise.all([
+				await RNFS.exists(constant.IMG_DIRECTORY_PATH),
+				await RNFS.exists(constant.DEL_DIRECTORY_PATH),
+			]);
+
+			if (!existImg) {
+				RNFS.mkdir(constant.IMG_DIRECTORY_PATH).catch((err) => CustomAlert(err.message));
+			}
+			if (!existDel) {
+				RNFS.mkdir(constant.DEL_DIRECTORY_PATH).catch((err) => CustomAlert(err.message));
 			}
 		};
 

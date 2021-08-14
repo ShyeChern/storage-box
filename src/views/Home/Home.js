@@ -25,6 +25,7 @@ export default function Home({ navigation }) {
 	const [itemList, setItemList] = useState([]);
 	const [itemRef, setItemRef] = useState([]);
 	const [showModal, setShowModal] = useState(false);
+	const [itemLength, setItemLength] = useState(0);
 	const isFocused = useIsFocused();
 
 	useEffect(() => {
@@ -33,11 +34,13 @@ export default function Home({ navigation }) {
 
 	const getItemList = async () => {
 		setItemRef([]);
-		const items = await readFile(constant.NOTE_PATH);
+		let items = await readFile(constant.NOTE_PATH);
 		if (!items.result) {
 			CustomAlert(items.message);
 		}
-		setItemList(JSON.parse(items.data).sort(sortBy('lastUpdate', true)));
+		items = JSON.parse(items.data);
+		setItemList(items.sort(sortBy('lastUpdate', true)));
+		setItemLength(items.filter((value) => !value.deletedAt).length);
 		setIsLoading(false);
 	};
 
@@ -161,12 +164,10 @@ export default function Home({ navigation }) {
 					)}
 					ListEmptyComponent={() =>
 						!isLoading &&
-						itemList.length === 0 && (
-							<Text style={styles.listEmpty}>No item saved in your list</Text>
-						)
+						itemLength === 0 && <Text style={styles.listEmpty}>No item saved in your list</Text>
 					}
 					ListFooterComponent={() =>
-						itemList.length > 0 && <Text style={styles.listFooter}>End of List</Text>
+						itemLength > 0 && <Text style={styles.listFooter}>End of List</Text>
 					}
 				/>
 			</SafeAreaView>
@@ -244,19 +245,7 @@ const styles = StyleSheet.create({
 		...styleBase.container,
 	},
 	floatButton: {
-		...styleBase.center,
-		backgroundColor: styleVar.color.light,
-		borderRadius: 50,
-		height: 50,
-		width: 50,
-		position: 'absolute',
-		right: 20,
-		bottom: 20,
-		shadowColor: styleVar.color.dark,
-		elevation: 5,
-		shadowRadius: 15,
-		shadowOpacity: 0.75,
-		shadowOffset: { width: 1, height: 13 },
+		...styleBase.floatButton,
 	},
 	listHeaderView: {
 		borderWidth: 1,

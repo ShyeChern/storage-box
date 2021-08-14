@@ -3,7 +3,6 @@ import RNFS from 'react-native-fs';
 // Sort array according to field
 export const sortBy = (field, reverse, primer) => {
 	const key = primer ? (x) => primer(x[field]) : (x) => x[field];
-
 	reverse = reverse ? -1 : 1;
 
 	return function (a, b) {
@@ -44,7 +43,7 @@ export const writeFile = async (path, content) => {
 
 // Read file from device
 export const readFile = async (path) => {
-	const prevPin = await RNFS.readFile(path)
+	const file = await RNFS.readFile(path)
 		.then((content) => {
 			return {
 				result: true,
@@ -57,5 +56,23 @@ export const readFile = async (path) => {
 				message: err.message,
 			};
 		});
-	return prevPin;
+	return file;
+};
+
+// Read directory from device
+export const readDirectory = async (path) => {
+	const files = await RNFS.readDir(path)
+		.then((content) => {
+			return {
+				result: true,
+				data: content,
+			};
+		})
+		.catch((err) => {
+			return {
+				result: false,
+				message: err.message,
+			};
+		});
+	return files;
 };

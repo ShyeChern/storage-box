@@ -6,7 +6,7 @@ An simple app to store note and photo.
 
 ## Project Information
 
-Developing in progress...
+Developing in progress...\
 **Only works and available in Android**
 
 ## Demo
@@ -19,12 +19,7 @@ Developing in progress...
 
 ## Todo
 
-- `delete item & folder, can recover after 30days auto delete`
-- `clear all in one btn`
-- `6 digit pincode setup and change`
-- `Snap and store image`
-- `import image from camera`
-- `import & export json file`
+- `import & export function`
 
 ## ISSUE LIST
 

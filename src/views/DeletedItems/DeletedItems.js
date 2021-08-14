@@ -21,6 +21,7 @@ export default function DeletedItem({ navigation }) {
 	const [selectedItem, setSelectedItem] = useState({});
 	const [itemList, setItemList] = useState([]);
 	const [showModal, setShowModal] = useState(false);
+	const [itemLength, setItemLength] = useState(0);
 	const isFocused = useIsFocused();
 
 	useEffect(() => {
@@ -28,11 +29,13 @@ export default function DeletedItem({ navigation }) {
 	}, [isLoading, isFocused]);
 
 	const getItemList = async () => {
-		const items = await readFile(constant.NOTE_PATH);
+		let items = await readFile(constant.NOTE_PATH);
 		if (!items.result) {
 			CustomAlert(items.message);
 		}
-		setItemList(JSON.parse(items.data).sort(sortBy('deletedAt', true)));
+		items = JSON.parse(items.data);
+		setItemList(items.sort(sortBy('deletedAt', true)));
+		setItemLength(items.filter((value) => value.deletedAt).length);
 		setIsLoading(false);
 	};
 
@@ -100,11 +103,10 @@ export default function DeletedItem({ navigation }) {
 						</View>
 					)}
 					ListEmptyComponent={() =>
-						!isLoading &&
-						itemList.length === 0 && <Text style={styles.listEmpty}>No deleted item</Text>
+						!isLoading && itemLength === 0 && <Text style={styles.listEmpty}>No deleted item</Text>
 					}
 					ListFooterComponent={() =>
-						itemList.length > 0 && <Text style={styles.listFooter}>End of List</Text>
+						itemLength > 0 && <Text style={styles.listFooter}>End of List</Text>
 					}
 				/>
 			</SafeAreaView>

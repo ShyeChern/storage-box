@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.3.0 (2021-08-14)
+### Feature
+* Add image save image function
+### Fix
+* Fix item and deleted item list message not display correctly
+
 ## v1.2.0 (2021-08-12)
 ### Feature
 * Add deleted item function
