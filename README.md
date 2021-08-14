@@ -11,7 +11,11 @@ An storage app which can save your important notes and images. So we can visit i
 
 ## Demo
 
-**_to update..._**
+### Add Note
+<img src="https://github.com/ShyeChern/chat-app/raw/master/gif/note.gif" alt="Note" width="200" height="400"> 
+
+### Add Image
+<img src="https://github.com/ShyeChern/chat-app/raw/master/gif/image.gif" alt="Image" width="200" height="400">
 
 ## Installation
 
