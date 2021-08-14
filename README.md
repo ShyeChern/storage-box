@@ -15,7 +15,7 @@ Developing in progress...\
 
 ## Installation
 
-1. Go to [`Google Drive Link (to update)`](https://google.com/) and install the app
+1. Go to [`Google Drive Link`](https://drive.google.com/file/d/1WgHAcfgzJLZqP64N3bCn1wGmVqGiSVM6/view?usp=sharing) and install the app
 
 ## Todo
 
