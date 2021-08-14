@@ -11,11 +11,8 @@ An storage app which can save your important notes and photos. So we can visit i
 
 ## Demo
 
-### Add Note
-<img src="https://github.com/ShyeChern/storage-box/raw/master/gif/note.gif" alt="Note" width="200" height="350"> 
-
-### Add Photos
-<img src="https://github.com/ShyeChern/storage-box/raw/master/gif/photo.gif" alt="Photo" width="200" height="350">
+### Add Note & Photo
+<img src="https://github.com/ShyeChern/storage-box/raw/master/gif/note.gif" alt="Note" width="200" height="350"> &nbsp; &nbsp; &nbsp; <img src="https://github.com/ShyeChern/storage-box/raw/master/gif/photo.gif" alt="Photo" width="200" height="350">
 
 ## Installation
 
