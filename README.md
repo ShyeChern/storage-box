@@ -6,16 +6,16 @@ An simple app to store note and photo.
 
 ## Project Information
 
-An storage app which can save your important notes and images. So we can visit it when needed.\
-**It only works and available in Android**
+An storage app which can save your important notes and photos. So we can visit it when needed.\
+**Only works and available in Android**
 
 ## Demo
 
 ### Add Note
-<img src="https://github.com/ShyeChern/chat-app/raw/master/gif/note.gif" alt="Note" width="200" height="400"> 
+<img src="https://github.com/ShyeChern/storage-box/raw/master/gif/note.gif" alt="Note" width="200" height="350"> 
 
-### Add Image
-<img src="https://github.com/ShyeChern/chat-app/raw/master/gif/image.gif" alt="Image" width="200" height="400">
+### Add Photos
+<img src="https://github.com/ShyeChern/storage-box/raw/master/gif/photo.gif" alt="Photo" width="200" height="350">
 
 ## Installation
 
