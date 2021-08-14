@@ -24,11 +24,11 @@ An storage app which can save your important notes and photos. So we can visit i
 
 ## ISSUE LIST
 
-1. Android text align justify with selectable text **(#ISSUE-001)**
+1. **(#ISSUE-001)** Android text align justify with selectable text
    - Date: `31-07-2021`
    - Location: [`src/views/Home/Home.js`](src/views/Home/Home.js), [`src/views/DeletedItems/DeletedItems.js`](src/views/DeletedItems/DeletedItems.js)
    - Issue Link: [`https://github.com/facebook/react-native/issues/30332`](https://github.com/facebook/react-native/issues/30332)
-2. react-native-fs not truncating file contents on Android 10 **(#ISSUE-002)**
+2. **(#ISSUE-002)** react-native-fs not truncating file contents on Android 10 
    - Date: `06-08-2021`
    - Location: [`src/utils/function.js`](src/utils/function.js)
    - Issue Link: [`https://github.com/itinance/react-native-fs/issues/700`](https://github.com/itinance/react-native-fs/issues/700)
