@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.3.1 (2021-08-14)
+### Fix
+* First time initialization issue
+* Android phone permission issue
+
 ## v1.3.0 (2021-08-14)
 ### Feature
 * Add image save image function

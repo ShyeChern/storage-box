@@ -6,8 +6,8 @@ An simple app to store note and photo.
 
 ## Project Information
 
-Developing in progress...\
-**Only works and available in Android**
+An storage app which can save your important notes and images. So we can visit it when needed.\
+**It only works and available in Android**
 
 ## Demo
 
@@ -15,7 +15,7 @@ Developing in progress...\
 
 ## Installation
 
-1. Go to [`Google Drive Link`](https://drive.google.com/file/d/1WgHAcfgzJLZqP64N3bCn1wGmVqGiSVM6/view?usp=sharing) and install the app
+1. Go to [`Google Drive Link`](https://drive.google.com/file/d/1UTsHzpWJPRslR1lrwMv2RyGRSEqNO9fo/view?usp=sharing) and install the apk.
 
 ## Todo
 

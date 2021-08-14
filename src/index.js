@@ -4,10 +4,11 @@ import { StyleSheet, ActivityIndicator } from 'react-native';
 import RNFS from 'react-native-fs';
 import MainNavigator from 'src/routes/MainNavigator';
 import CombinedContext from 'src/components/CombinedContext';
-import { constant } from 'src/utils/constants';
-import { writeFile, readFile } from 'src/utils/function';
 import CustomAlert from 'src/components/CustomAlert';
 import Pincode from 'src/views/Pincode/Pincode';
+import { constant } from 'src/utils/constants';
+import { writeFile, readFile } from 'src/utils/function';
+import { checkPermission } from 'src/utils/permissions';
 
 export default function App() {
 	const [isLoading, setIsLoading] = useState(true);
@@ -41,25 +42,6 @@ export default function App() {
 			}
 		};
 
-		const checkPincode = async () => {
-			const exist = await RNFS.exists(constant.PINCODE_PATH);
-			if (!exist) {
-				RNFS.writeFile(constant.PINCODE_PATH, '', 'utf8').catch((err) => {
-					CustomAlert(err.message);
-				});
-				setAuth(true);
-			} else {
-				const pincode = await readFile(constant.PINCODE_PATH);
-				if (!pincode.result) {
-					CustomAlert(pincode.message);
-				}
-				// empty string = pincode not set
-				if (!pincode.data) {
-					setAuth(true);
-				}
-			}
-		};
-
 		const checkDeletedItem = async () => {
 			let items = await readFile(constant.NOTE_PATH);
 			if (!items.result) {
@@ -79,13 +61,39 @@ export default function App() {
 					}),
 				),
 			);
+		};
+
+		const checkPincode = async () => {
+			const exist = await RNFS.exists(constant.PINCODE_PATH);
+			if (!exist) {
+				RNFS.writeFile(constant.PINCODE_PATH, '', 'utf8').catch((err) => {
+					CustomAlert(err.message);
+				});
+				setAuth(true);
+			} else {
+				const pincode = await readFile(constant.PINCODE_PATH);
+				if (!pincode.result) {
+					CustomAlert(pincode.message);
+				}
+				// empty string = pincode not set
+				if (!pincode.data) {
+					setAuth(true);
+				}
+			}
+		};
+
+		const init = async () => {
+			await checkPermission();
+			// directory and pincode no need await
+			createDirectory();
+			checkPincode();
+			// create not and check delete depend on each other
+			await createNoteFile();
+			await checkDeletedItem();
 			setIsLoading(false);
 		};
 
-		createDirectory();
-		createNoteFile();
-		checkPincode();
-		checkDeletedItem();
+		init();
 	}, []);
 
 	if (isLoading) {
