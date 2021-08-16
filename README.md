@@ -1,13 +1,10 @@
 # Storage Box
 
-An simple app to store note and photo.
+An simple app to store note and photo. It can save your important notes and photos, so you can visit it when needed
+
+**Project Status: Completed (Only works and available in Android)**
 
 [Changelog](CHANGELOG.md)
-
-## Project Information
-
-An storage app which can save your important notes and photos. So we can visit it when needed.\
-**Only works and available in Android**
 
 ## Demo
 
