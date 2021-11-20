@@ -1,6 +1,6 @@
 # Storage Box
 
-An simple app to store note and photo. It can save your important notes and photos, so you can visit it when needed
+An simple app to store note and photo and developed by using React Native. It can save your important notes and photos, so you can visit it when needed
 
 **Project Status: Completed (Only works and available in Android)**
 
